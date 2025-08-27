@@ -4,6 +4,7 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://mirrors.tencent.com/nexus/repository/maven-public/")
         if (extra["compose.useMavenLocal"] == "true") {
             mavenLocal()
         }
@@ -28,17 +29,22 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://mirrors.tencent.com/nexus/repository/maven-public/")
     }
 }
 
-include(":SplitPane:library")
-include(":SplitPane:demo")
-include(":AnimatedImage:library")
-include(":AnimatedImage:demo")
+// include(":SplitPane:library")
+// include(":AnimatedImage:library")
 include(":resources:library")
-include(":resources:demo:androidApp")
-include(":resources:demo:desktopApp")
-include(":resources:demo:shared")
 include(":ui-tooling-preview:library")
-include(":ui-tooling-preview:demo:desktopApp")
-include(":ui-tooling-preview:demo:shared")
+
+// Disable demos when publishing.
+if (extra.properties["compose.demo"] != "false") {
+    include(":SplitPane:demo")
+    include(":AnimatedImage:demo")
+    include(":resources:demo:androidApp")
+    include(":resources:demo:desktopApp")
+    include(":resources:demo:shared")
+    include(":ui-tooling-preview:demo:desktopApp")
+    include(":ui-tooling-preview:demo:shared")
+}

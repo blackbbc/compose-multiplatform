@@ -31,8 +31,21 @@ internal object ComposeCompilerCompatibility {
         "2.0.0-RC1" to "1.5.11-kt-2.0.0-RC1",
     )
 
+    private val kotlinToCompilerAboutOhos = sortedMapOf(
+        "1.9.23-" to "1.5.10.1-dev-1"
+    )
+
+    private fun compilerVersionForAboutOhos(kotlinVersion: String): String? {
+        for ((key, value) in kotlinToCompilerAboutOhos.entries.reversed()) {
+            if (kotlinVersion.startsWith(key)) {
+                return value
+            }
+        }
+        return null
+    }
+
     fun compilerVersionFor(kotlinVersion: String): String {
-        return kotlinToCompiler[kotlinVersion] ?: throw RuntimeException(
+        return kotlinToCompiler[kotlinVersion] ?: compilerVersionForAboutOhos(kotlinVersion) ?: throw RuntimeException(
             "Compose Multiplatform ${ComposeBuildConfig.composeGradlePluginVersion} doesn't support Kotlin " +
                     "$kotlinVersion. " +
                     "Please see $KOTLIN_COMPATIBILITY_LINK " +

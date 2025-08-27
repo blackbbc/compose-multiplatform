@@ -12,6 +12,10 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import org.jetbrains.compose.resources.platform.PlatformImageManagerImpl
 import org.jetbrains.compose.resources.vector.toImageVector
 import org.jetbrains.compose.resources.vector.xmldom.Element
 
@@ -58,10 +62,16 @@ fun imageResource(resource: DrawableResource): ImageBitmap {
     val resourceReader = LocalResourceReader.currentOrPreview
     val imageBitmap by rememberResourceState(resource, resourceReader, { emptyImageBitmap }) { env ->
         val path = resource.getResourceItemByEnvironment(env).path
-        val cached = loadImage(path, resourceReader) {
-            ImageCache.Bitmap(it.toImageBitmap())
-        } as ImageCache.Bitmap
-        cached.bitmap
+        // region Tencent Code
+        if (PlatformImageManagerImpl.isUsePlatformImage) {
+            PlatformImageManagerImpl.loadImageBitmap(path)
+        } else {
+        // endregion
+            val cached = loadImage(path, resourceReader) {
+                ImageCache.Bitmap(it.toImageBitmap())
+            } as ImageCache.Bitmap
+            cached.bitmap
+        }
     }
     return imageBitmap
 }
@@ -139,7 +149,9 @@ private sealed interface ImageCache {
 private val imageCache = AsyncCache<String, ImageCache>()
 
 //@TestOnly
-internal fun dropImageCache() {
+// TODO，为了在skia方案和Native方案之间切换，需要删除缓存，否则会出现crash，未来可以删除。
+@Deprecated("框架切换用的，业务不要使用")
+fun dropImageCache() {
     imageCache.clear()
 }
 

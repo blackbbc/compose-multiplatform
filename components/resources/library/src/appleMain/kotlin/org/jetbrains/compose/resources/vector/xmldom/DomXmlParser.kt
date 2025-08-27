@@ -11,6 +11,7 @@ import platform.Foundation.NSXMLParser
 import platform.Foundation.NSXMLParserDelegateProtocol
 import platform.Foundation.dataUsingEncoding
 import platform.darwin.NSObject
+import kotlinx.cinterop.ObjCSignatureOverride
 
 internal fun parse(xml: String): Element {
     val parser = DomXmlParser()
@@ -68,6 +69,7 @@ private class DomXmlParser : NSObject(), NSXMLParserDelegateProtocol {
 
     var root: Element? = null
 
+    @ObjCSignatureOverride
     override fun parser(
         parser: NSXMLParser,
         didStartElement: String,
@@ -91,12 +93,14 @@ private class DomXmlParser : NSObject(), NSXMLParserDelegateProtocol {
         nodeStack.add(node)
     }
 
+    @ObjCSignatureOverride
     override fun parser(parser: NSXMLParser, foundCharacters: String) {
         nodeStack.lastOrNull()?.let { node ->
             node.textContent = node.textContent.orEmpty() + foundCharacters
         }
     }
 
+    @ObjCSignatureOverride
     override fun parser(
         parser: NSXMLParser,
         didEndElement: String,
@@ -107,6 +111,7 @@ private class DomXmlParser : NSObject(), NSXMLParserDelegateProtocol {
         assert(node.localName.equals(didEndElement))
     }
 
+    @ObjCSignatureOverride
     override fun parser(
         parser: NSXMLParser,
         didStartMappingPrefix: String,
@@ -116,15 +121,18 @@ private class DomXmlParser : NSObject(), NSXMLParserDelegateProtocol {
         curPrefixMap = curPrefixMapInverted.entries.associateBy({ it.value }, { it.key })
     }
 
+    @ObjCSignatureOverride
     override fun parser(parser: NSXMLParser, didEndMappingPrefix: String) {
         curPrefixMapInverted.remove(didEndMappingPrefix)
         curPrefixMap = curPrefixMapInverted.entries.associateBy({ it.value }, { it.key })
     }
 
+    @ObjCSignatureOverride
     override fun parser(parser: NSXMLParser, validationErrorOccurred: NSError) {
         throw MalformedXMLException("validation error occurred")
     }
 
+    @ObjCSignatureOverride
     override fun parser(parser: NSXMLParser, parseErrorOccurred: NSError) {
         throw MalformedXMLException("parse error occurred")
     }

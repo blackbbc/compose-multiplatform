@@ -29,6 +29,11 @@ sealed class Resource
         return id == other.id
     }
 
+    // region TencentCode
+    @OptIn(InternalResourceApi::class)
+    fun resourceItemPath(): String? = items.firstOrNull()?.path
+    // endregion
+
     override fun hashCode(): Int {
         return id.hashCode()
     }

@@ -1,4 +1,4 @@
-import kotlinx.validation.ExperimentalBCVApi
+//import kotlinx.validation.ExperimentalBCVApi
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
@@ -7,11 +7,12 @@ plugins {
     id("org.jetbrains.compose")
     id("maven-publish")
     id("com.android.library")
-    id("org.jetbrains.kotlinx.binary-compatibility-validator")
+//    id("org.jetbrains.kotlinx.binary-compatibility-validator")
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    jvm("desktop")
+//    jvm("desktop")
     androidTarget {
         publishLibraryVariants("release")
         compilations.all {
@@ -23,27 +24,29 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-    js {
-        browser {
-            testTask(Action {
-                enabled = false
-            })
-        }
-    }
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser {
-            testTask(Action {
-                useKarma {
-                    useChromeHeadless()
-                    useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
-                }
-            })
-        }
-        binaries.executable()
-    }
-    macosX64()
-    macosArm64()
+//    js {
+//        browser {
+//            testTask(Action {
+//                enabled = false
+//            })
+//        }
+//    }
+//    @OptIn(ExperimentalWasmDsl::class)
+//    wasmJs {
+//        browser {
+//            testTask(Action {
+//                useKarma {
+//                    useChromeHeadless()
+//                    useConfigDirectory(project.projectDir.resolve("karma.config.d").resolve("wasm"))
+//                }
+//            })
+//        }
+//        binaries.executable()
+//    }
+//    macosX64()
+//    macosArm64()
+
+    ohosArm64()
 
     applyDefaultHierarchyTemplate()
     sourceSets {
@@ -100,17 +103,17 @@ kotlin {
         val jvmAndAndroidTest by creating {
             dependsOn(blockingTest)
         }
-        val desktopMain by getting {
-            dependsOn(skikoMain)
-            dependsOn(jvmAndAndroidMain)
-        }
-        val desktopTest by getting {
-            dependsOn(skikoTest)
-            dependsOn(jvmAndAndroidTest)
-            dependencies {
-                implementation(compose.desktop.currentOs)
-            }
-        }
+//        val desktopMain by getting {
+//            dependsOn(skikoMain)
+//            dependsOn(jvmAndAndroidMain)
+//        }
+//        val desktopTest by getting {
+//            dependsOn(skikoTest)
+//            dependsOn(jvmAndAndroidTest)
+//            dependencies {
+//                implementation(compose.desktop.currentOs)
+//            }
+//        }
         val androidMain by getting {
             dependsOn(jvmAndAndroidMain)
         }
@@ -134,24 +137,24 @@ kotlin {
             dependsOn(skikoTest)
             dependsOn(blockingTest)
         }
-        val webMain by creating {
-            dependsOn(skikoMain)
-        }
-        val jsMain by getting {
-            dependsOn(webMain)
-        }
-        val wasmJsMain by getting {
-            dependsOn(webMain)
-        }
-        val webTest by creating {
-            dependsOn(skikoTest)
-        }
-        val jsTest by getting {
-            dependsOn(webTest)
-        }
-        val wasmJsTest by getting {
-            dependsOn(webTest)
-        }
+//        val webMain by creating {
+//            dependsOn(skikoMain)
+//        }
+//        val jsMain by getting {
+//            dependsOn(webMain)
+//        }
+//        val wasmJsMain by getting {
+//            dependsOn(webMain)
+//        }
+//        val webTest by creating {
+//            dependsOn(skikoTest)
+//        }
+//        val jsTest by getting {
+//            dependsOn(webTest)
+//        }
+//        val wasmJsTest by getting {
+//            dependsOn(webTest)
+//        }
     }
 }
 
@@ -195,11 +198,11 @@ configureMavenPublication(
     name = "Resources for Compose JB"
 )
 
-apiValidation {
-    @OptIn(ExperimentalBCVApi::class)
-    klib { enabled = true }
-    nonPublicMarkers.add("org.jetbrains.compose.resources.InternalResourceApi")
-}
+//apiValidation {
+//    @OptIn(ExperimentalBCVApi::class)
+//    klib { enabled = true }
+//    nonPublicMarkers.add("org.jetbrains.compose.resources.InternalResourceApi")
+//}
 
 //utility task to generate CLDRPluralRuleLists.kt file by 'CLDRPluralRules/plurals.xml'
 tasks.register<GeneratePluralRuleListsTask>("generatePluralRuleLists") {

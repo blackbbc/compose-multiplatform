@@ -8,7 +8,7 @@ plugins {
 }
 
 kotlin {
-    jvm("desktop")
+//    jvm("desktop")
     androidTarget {
         publishLibraryVariants("release")
         compilations.all {
@@ -20,17 +20,19 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-    js {
-        browser {
-        }
-    }
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser {
-        }
-    }
-    macosX64()
-    macosArm64()
+//    js {
+//        browser {
+//        }
+//    }
+//    @OptIn(ExperimentalWasmDsl::class)
+//    wasmJs {
+//        browser {
+//        }
+//    }
+//    macosX64()
+//    macosArm64()
+
+    ohosArm64()
 }
 
 android {

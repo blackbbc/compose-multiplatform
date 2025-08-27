@@ -137,7 +137,7 @@ private fun KotlinNativeTarget.isIosSimulatorTarget(): Boolean =
     konanTarget === KonanTarget.IOS_X64 || konanTarget === KonanTarget.IOS_SIMULATOR_ARM64
 
 private fun KotlinNativeTarget.isIosDeviceTarget(): Boolean =
-    konanTarget === KonanTarget.IOS_ARM64 || konanTarget === KonanTarget.IOS_ARM32
+    konanTarget === KonanTarget.IOS_ARM64 // || konanTarget === KonanTarget.IOS_ARM32
 
 private fun KotlinNativeTarget.isIosTarget(): Boolean =
     isIosSimulatorTarget() || isIosDeviceTarget()

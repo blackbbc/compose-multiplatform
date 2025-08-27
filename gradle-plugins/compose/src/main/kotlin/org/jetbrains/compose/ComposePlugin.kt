@@ -62,15 +62,6 @@ abstract class ComposePlugin : Plugin<Project> {
                 project.configureExperimentalTargetsFlagsCheck(mppExt)
             }
 
-            project.tasks.withType(KotlinCompile::class.java).configureEach {
-                it.kotlinOptions.apply {
-                    freeCompilerArgs = freeCompilerArgs +
-                            composeExtension.kotlinCompilerPluginArgs.get().flatMap { arg ->
-                                listOf("-P", "plugin:androidx.compose.compiler.plugins.kotlin:$arg")
-                            }
-                }
-            }
-
             disableSignatureClashCheck(project)
         }
     }

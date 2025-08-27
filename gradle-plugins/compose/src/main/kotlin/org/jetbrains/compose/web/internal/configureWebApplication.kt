@@ -92,8 +92,8 @@ private fun skikoVersionProvider(project: Project): Provider<String> {
     )
     return project.provider {
         val skikoDependency = configurationWithSkiko.allDependenciesDescriptors.firstOrNull(::isSkikoDependency)
-        skikoDependency?.version
-            ?: error("Cannot determine the version of Skiko for Compose '$composeVersion'")
+        skikoDependency?.version ?: "0.7.97"
+            // ?: error("Cannot determine the version of Skiko for Compose '$composeVersion'")
     }
 }
 

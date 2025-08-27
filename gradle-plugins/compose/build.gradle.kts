@@ -43,7 +43,7 @@ val embeddedDependencies by configurations.creating {
     isTransitive = false
 }
 
-val kgpResourcesDevVersion = "2.0.0-dev-17632"
+val kgpResourcesDevVersion = "2.0.21"
 //KMP resources API available since ^kgpResourcesDevVersion
 repositories {
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev/")

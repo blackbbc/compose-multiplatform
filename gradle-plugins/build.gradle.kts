@@ -54,6 +54,22 @@ subprojects {
                     name = "LocalDir"
                     url = rootProject.buildDir.resolve("repo").toURI()
                 }
+
+                maven {
+                    name = "Remote"
+                    setUrl(findProperty("maven.remote.url").toString())
+                    credentials {
+                        username = findProperty("maven.remote.username")?.toString()
+                        password = findProperty("maven.remote.password")?.toString()
+
+                        if (username.isNullOrBlank() || password.isNullOrBlank()) {
+                            logger.warn("""
+                                |Maven credentials are not properly configured.
+                                |Get them here: ${findProperty("maven.remote.manager.url")}.
+                            """.trimMargin())
+                        }
+                    }
+                }
             }
         }
     }
