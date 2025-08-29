@@ -17,13 +17,40 @@
 
 package org.jetbrains.compose.resources
 
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.usePinned
+import org.jetbrains.compose.resources.platform.OH_NativeResourceManager
+import platform.resource.OH_ResourceManager_CloseRawFile
+import platform.resource.OH_ResourceManager_GetRawFileSize
+import platform.resource.OH_ResourceManager_OpenRawFile
+import platform.resource.OH_ResourceManager_ReadRawFile
+import platform.resource.OH_ResourceManager_SeekRawFile
+
 internal actual fun getPlatformResourceReader(): ResourceReader = object: ResourceReader {
     override suspend fun read(path: String): ByteArray {
-        TODO("Not yet implemented")
+        val rawFile = OH_ResourceManager_OpenRawFile(OH_NativeResourceManager, path)
+        val size = OH_ResourceManager_GetRawFileSize(rawFile)
+        println("ResourceReader.ohosArm64: read $path, size:$size")
+
+        val buffer = ByteArray(size.toInt())
+        buffer.usePinned { pinnedBuffer ->
+            OH_ResourceManager_ReadRawFile(rawFile, pinnedBuffer.addressOf(0), size.toULong())
+        }
+        OH_ResourceManager_CloseRawFile(rawFile)
+        return buffer
     }
 
     override suspend fun readPart(path: String, offset: Long, size: Long): ByteArray {
-        TODO("Not yet implemented")
+        val rawFile = OH_ResourceManager_OpenRawFile(OH_NativeResourceManager, path)
+        println("ResourceReader.ohosArm64: readPart $path, offset:$offset, size:$size")
+
+        val buffer = ByteArray(size.toInt())
+        buffer.usePinned { pinnedBuffer ->
+            OH_ResourceManager_SeekRawFile(rawFile, offset, 0)
+            OH_ResourceManager_ReadRawFile(rawFile, pinnedBuffer.addressOf(0), size.toULong())
+        }
+        OH_ResourceManager_CloseRawFile(rawFile)
+        return buffer
     }
 
     override fun getUri(path: String): String {

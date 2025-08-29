@@ -46,7 +46,13 @@ kotlin {
 //    macosX64()
 //    macosArm64()
 
-    ohosArm64()
+    ohosArm64() {
+        val main by compilations.getting
+        val resource by main.cinterops.creating {
+            defFile(file("src/ohosArm64Main/cinterop/resource.def"))
+            includeDirs(file("src/ohosArm64Main/cinterop/include"))
+        }
+    }
 
     applyDefaultHierarchyTemplate()
     sourceSets {
@@ -132,6 +138,9 @@ kotlin {
         val nativeMain by getting {
             dependsOn(skikoMain)
             dependsOn(blockingMain)
+            dependencies {
+                implementation(libs.xmlutil.core)
+            }
         }
         val nativeTest by getting {
             dependsOn(skikoTest)

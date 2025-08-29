@@ -17,4 +17,14 @@
 
 package org.jetbrains.compose.resources.platform
 
+import kotlinx.cinterop.CPointer
+
 internal actual object PlatformImageManagerImpl : PlatformImageManager
+
+typealias NativeResourceManager = CPointer<cnames.structs.NativeResourceManager>?
+var OH_NativeResourceManager: NativeResourceManager = null
+    private set
+
+fun OH_InitNativeResourceManager(mgr: NativeResourceManager) {
+    OH_NativeResourceManager = mgr
+}
