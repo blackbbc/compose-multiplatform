@@ -18,10 +18,10 @@
 package org.jetbrains.compose.resources
 
 internal actual fun getSystemEnvironment(): ResourceEnvironment {
-//    TODO("Not yet implemented")
+    // OHOS hard code zh-CN
     return ResourceEnvironment(
-        language = LanguageQualifier("en"),
-        region = RegionQualifier("US"),
+        language = LanguageQualifier("zh"),
+        region = RegionQualifier("CN"),
         theme = ThemeQualifier.selectByValue(false),
         density = DensityQualifier.selectByDensity(1.0f)
     )
