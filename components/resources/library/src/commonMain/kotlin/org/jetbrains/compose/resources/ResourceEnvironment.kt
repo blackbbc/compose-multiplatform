@@ -49,9 +49,22 @@ internal val DefaultComposeEnvironment = object : ComposeEnvironment {
 
         //cache ResourceEnvironment unless compose environment is changed
         return remember(composeLocale, composeTheme, composeDensity) {
+            // For OHOS, language='zh_CN' region='zh-cn'
+            val normalizedLanguage = composeLocale.language
+                .replace('_', '-')
+                .lowercase()
+                .split('-')
+                .first()
+
+            val normalizedRegion = composeLocale.region
+                .replace('_', '-')
+                .split('-')
+                .last()
+                .uppercase()
+
             ResourceEnvironment(
-                LanguageQualifier(composeLocale.language),
-                RegionQualifier(composeLocale.region),
+                LanguageQualifier(normalizedLanguage),
+                RegionQualifier(normalizedRegion),
                 ThemeQualifier.selectByValue(composeTheme),
                 DensityQualifier.selectByDensity(composeDensity.density)
             )
@@ -178,6 +191,8 @@ private fun List<ResourceItem>.filterByLocale(
     language: LanguageQualifier,
     region: RegionQualifier
 ): List<ResourceItem> {
+    // 鸿蒙输入参数 environment: language=LanguageQualifier(language='zh_CN'), region=RegionQualifier(region='zh-cn')
+    // 要匹配 language=LanguageQualifier(language='zh'), region=RegionQualifier(region='CN')
     val withLanguage = filter { item ->
         item.qualifiers.any { it == language }
     }
