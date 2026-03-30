@@ -35,7 +35,7 @@ class ResourceEnvironment internal constructor(
     }
 }
 
-internal interface ComposeEnvironment {
+interface ComposeEnvironment {
     @Composable
     fun rememberEnvironment(): ResourceEnvironment
 }
@@ -73,7 +73,7 @@ internal val DefaultComposeEnvironment = object : ComposeEnvironment {
 }
 
 //ComposeEnvironment provider will be overridden for tests
-internal val LocalComposeEnvironment = staticCompositionLocalOf { DefaultComposeEnvironment }
+val LocalComposeEnvironment = staticCompositionLocalOf<ComposeEnvironment> { DefaultComposeEnvironment }
 
 /**
  * Returns an instance of [ResourceEnvironment].
@@ -88,6 +88,24 @@ fun rememberResourceEnvironment(): ResourceEnvironment {
     val composeEnvironment = LocalComposeEnvironment.current
     return composeEnvironment.rememberEnvironment()
 }
+
+/**
+ * Creates a [ResourceEnvironment] from raw values.
+ * Intended for platform-specific code that needs to construct a ResourceEnvironment
+ * outside the composable context (e.g., OHOS non-composable resource access).
+ */
+@ExperimentalResourceApi
+fun ResourceEnvironment(
+    language: String,
+    region: String,
+    isDark: Boolean,
+    density: Float
+): ResourceEnvironment = ResourceEnvironment(
+    LanguageQualifier(language),
+    RegionQualifier(region),
+    ThemeQualifier.selectByValue(isDark),
+    DensityQualifier.selectByDensity(density)
+)
 
 internal expect fun getSystemEnvironment(): ResourceEnvironment
 

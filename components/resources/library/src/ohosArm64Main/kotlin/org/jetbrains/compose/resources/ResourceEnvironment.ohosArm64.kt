@@ -17,9 +17,14 @@
 
 package org.jetbrains.compose.resources
 
+/**
+ * 由 Bagel 在 onWindowStageLoaded() 中注册，用于非 Composable 路径的资源加载。
+ * 未注册时回退到硬编码默认值。
+ */
+var ohosSystemEnvironmentProvider: (() -> ResourceEnvironment)? = null
+
 internal actual fun getSystemEnvironment(): ResourceEnvironment {
-    // OHOS hard code zh-CN
-    return ResourceEnvironment(
+    return ohosSystemEnvironmentProvider?.invoke() ?: ResourceEnvironment(
         language = LanguageQualifier("zh"),
         region = RegionQualifier("CN"),
         theme = ThemeQualifier.selectByValue(false),
