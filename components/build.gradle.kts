@@ -47,12 +47,14 @@ subprojects {
                 }
             }
 
-            val configurePublishComposeJb = { repositoryName: String ->
+            // maven-publish names the per-publication tasks "...ToMavenLocal" for mavenLocal but
+            // "...To<Name>Repository" for declared repositories, so the suffix is passed separately.
+            val configurePublishComposeJb = { repositoryName: String, publishTaskSuffix: String ->
                 tasks.register("publishComposeJbTo${repositoryName}") {
                     group = "publishing"
 
                     parsedPlatforms.forEach {
-                        val taskName = "publish${it.name}PublicationTo${repositoryName}"
+                        val taskName = "publish${it.name}PublicationTo${publishTaskSuffix}"
                         val task = tasks.findByName(taskName)
                         if (task == null) {
                             logger.warn("Cannot find task '$taskName' in project '${project.name}'")
@@ -63,9 +65,10 @@ subprojects {
                 }
             }
 
-            configurePublishComposeJb("MavenLocal")
+            configurePublishComposeJb("MavenLocal", "MavenLocal")
             repositories.all {
-                configurePublishComposeJb(name.capitalizeUS())
+                val repositoryName = name.capitalizeUS()
+                configurePublishComposeJb(repositoryName, "${repositoryName}Repository")
             }
         }
     }
